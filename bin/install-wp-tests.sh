@@ -50,6 +50,8 @@ install_test_suite() {
 	sed $ioption "s/yourusernamehere/$DB_USER/" wp-tests-config.php
 	sed $ioption "s/yourpasswordhere/$DB_PASS/" wp-tests-config.php
 	sed $ioption "s|localhost|${DB_HOST}|" wp-tests-config.php
+
+	git clone http://github.com/calevans/wp-session-manager.git $WP_CORE_DIR/wp-content/plugins/wp-session-manager
 }
 
 install_db() {
