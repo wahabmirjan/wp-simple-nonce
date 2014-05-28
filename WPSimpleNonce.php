@@ -2,8 +2,15 @@
 Class WPSimpleNonce {
 
 
-	public static function createNonce($name)
+	public static function createNonce($name='nonce')
 	{
+		if (is_array($name)) {
+			if (isset($name['name'])) {
+				$name = $name['name'];
+			} else {
+				$name = 'nonce';
+			}
+		}
 		$session = WP_Session::get_instance();
 		if (!array_key_exists('nonce',$session)) {
 		  $session['nonce'] = array();
@@ -13,8 +20,16 @@ Class WPSimpleNonce {
 	}
 
 
-	public static function createNonceField($name)
+	public static function createNonceField($name='nonce')
 	{
+		if (is_array($name)) {
+			if (isset($name['name'])) {
+				$name = $name['name'];
+			} else {
+				$name = 'nonce';
+			}
+		}
+
 		$name   = filter_var($name,FILTER_SANITIZE_STRING);
 		$nonce  = self::createNonce($name);
 

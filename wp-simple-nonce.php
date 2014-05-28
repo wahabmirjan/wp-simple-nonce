@@ -15,3 +15,7 @@ THIS PLUGIN REQUIRES http://github.com/calevans/wp-session-manager
 if ( ! class_exists( 'WPSimpleNonce' ) ) {
 	require_once( 'WPSimpleNonce.php' );
 }
+
+add_shortcode( 'simpleNonce', 'WPSimpleNonce::createNonce' );
+add_shortcode( 'simpleNonceField', 'WPSimpleNonce::createNonceField' );
+
