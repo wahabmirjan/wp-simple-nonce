@@ -13,6 +13,16 @@ class WPSimpleNonceTest extends WP_UnitTestCase {
 		$nonce = WPSimpleNonce::createNonce('test');
 		$this->assertNotEmpty($nonce);
 		$this->assertTrue(WPSimpleNonce::checkNonce('test',$nonce));
+		return;
+	}
+
+	function testUsedOnce()
+	{
+		$nonce = WPSimpleNonce::createNonce('test');
+		$this->assertNotEmpty($nonce);
+		$this->assertTrue(WPSimpleNonce::checkNonce('test',$nonce));
+		$this->assertFalse(WPSimpleNonce::checkNonce('test',$nonce));
+		return;
 	}
 
 	function testComplex() 
@@ -21,6 +31,7 @@ class WPSimpleNonceTest extends WP_UnitTestCase {
 		$field = WPSimpleNonce::createNonceField('fieldTest');
 		$this->assertNotEmpty($nonce);
 		$this->assertTrue(WPSimpleNonce::checkNonce('nonceTest',$nonce));
+		return;
 	}
 
 	function testFormField()
@@ -29,8 +40,8 @@ class WPSimpleNonceTest extends WP_UnitTestCase {
 		$this->assertRegExp('/.*value="(.*)".*/',$field);
 		preg_match('/.*value="(.*)".*/',$field,$matches);
 		$this->assertTrue(WPSimpleNonce::checkNonce('test',$matches[1]));
+		return;
 	}
 
 
 }
-
