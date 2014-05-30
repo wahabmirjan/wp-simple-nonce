@@ -15,6 +15,14 @@ class WPSimpleNonceTest extends WP_UnitTestCase {
 		$this->assertTrue(WPSimpleNonce::checkNonce('test',$nonce));
 	}
 
+	function testComplex() 
+	{
+		$nonce = WPSimpleNonce::createNonce('nonceTest');
+		$field = WPSimpleNonce::createNonceField('fieldTest');
+		$this->assertNotEmpty($nonce);
+		$this->assertTrue(WPSimpleNonce::checkNonce('nonceTest',$nonce));
+	}
+
 	function testFormField()
 	{
 		$field = WPSimpleNonce::createNonceField('test');

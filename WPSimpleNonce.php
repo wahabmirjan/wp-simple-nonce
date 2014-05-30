@@ -11,11 +11,15 @@ Class WPSimpleNonce {
 				$name = 'nonce';
 			}
 		}
+
 		$session = WP_Session::get_instance();
-		if (!array_key_exists('nonce',$session)) {
+		if (!isset($session['nonce'])) {
 		  $session['nonce'] = array();
 		}
 		$session['nonce'][$name] = md5( wp_salt('nonce') . $name . microtime(true));
+
+		$session->write_data();
+
 		return $session['nonce'][$name];
 	}
 
@@ -40,6 +44,10 @@ Class WPSimpleNonce {
 	public static function checkNonce( $name, $value ) 
 	{
 		$session = WP_Session::get_instance();
+
+//echo "\n\n";
+//print_r($session);
+//echo "\n\n";
 		if (!isset($session['nonce'][$name])) {
 		  return false;      
 		}
@@ -47,6 +55,8 @@ Class WPSimpleNonce {
 		// just in case it doesn't get unset, let's fill it with garbage.
 		$session['nonce'][$name] = md5(wp_salt('nonce') . $name . microtime(true) . $name . wp_salt('nonce'));
 		unset($session['nonce'][$name]);
+//print_r($session);
+//echo "\n\n";
 		$session->write_data();
 		return $returnValue;
 	}
