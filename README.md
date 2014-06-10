@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/calevans/wp-simple-nonce.svg?branch=master)](https://travis-ci.org/calevans/wp-simple-nonce)
 
-wp-simple-nonce
+WP Simple Nonce
 ===============
 
 A very simple NONCE for WordPress developers.
