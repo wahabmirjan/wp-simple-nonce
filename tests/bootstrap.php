@@ -7,7 +7,7 @@ require_once $_tests_dir . '/includes/functions.php';
 
 function _manually_load_plugin() {
 	require dirname( __FILE__ ) . '/../wp-simple-nonce.php';
-    require_once ABSPATH.'wp-content/plugins/wp-session-manager/wp-session-manager.php';
+    require_once WP_PLUGIN_DIR .'/wp-session-manager/wp-session-manager.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
