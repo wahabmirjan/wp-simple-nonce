@@ -7,9 +7,6 @@ Author: Cal Evans <cal@calevans.com>
 Author URI: http://blog.calevans.com
 Plugin URI: PLUGIN SITE HERE
 Text Domain: wp-simple-nonce
-
-THIS PLUGIN REQUIRES http://github.com/calevans/wp-session-manager
-
 */
 
 if ( ! class_exists( 'WPSimpleNonce' ) ) {
