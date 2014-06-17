@@ -12,15 +12,10 @@ Class WPSimpleNonce {
 			}
 		}
 
-		$session = WP_Session::get_instance();
-		if (!isset($session['nonce'])) {
-		  $session['nonce'] = array();
-		}
-		$session['nonce'][$name] = md5( wp_salt('nonce') . $name . microtime(true));
+		$nonce = md5( wp_salt('nonce') . $name . microtime(true));
+		$this->storeNonce($nonce,$name);
 
-		$session->write_data();
-
-		return $session['nonce'][$name];
+		return $name;
 	}
 
 
@@ -43,23 +38,71 @@ Class WPSimpleNonce {
 
 	public static function checkNonce( $name, $value ) 
 	{
-		$session = WP_Session::get_instance();
-
-//echo "\n\n";
-//print_r($session);
-//echo "\n\n";
-		if (!isset($session['nonce'][$name])) {
-		  return false;      
-		}
-		$returnValue = ($session['nonce'][$name] === $value);
-		// just in case it doesn't get unset, let's fill it with garbage.
-		$session['nonce'][$name] = md5(wp_salt('nonce') . $name . microtime(true) . $name . wp_salt('nonce'));
-		unset($session['nonce'][$name]);
-//print_r($session);
-//echo "\n\n";
-		$session->write_data();
+		$name = filter_var($name,FILTER_SANITIZE_STRING);
+		$nonce = self::fetchNonce($name);
+		$returnValue = ($nonce===$value);
 		return $returnValue;
 	}
 
 
+	public static function  storeNonce($nonce, $name)
+	{
+		if (empty($name)) {
+			return false;
+		}
+
+		add_option('wp_simple_nonce_'.$name,$nonce);
+		add_option('wp_simple_nonce_expires_'.$name,time()+86400);
+		return true;
+	}
+
+
+	protected static function  fetchNonce($name)
+	{
+		$returnValue = get_option('wp_simple_nonce_'.$name);
+		$nonceExpires = get_option('wp_simple_nonce_expires_'.$name);
+		
+		self::deleteNonce($name);
+		
+		if ($nonceExpires<time()+86400) {
+			$returnValue = null;
+		}
+
+		return $returnValue;
+	}
+
+
+	public static function deleteNonce($name = '')
+	{
+		delete_option('wp_simple_nonce_'.$name);
+		delete_option('wp_simple_nonce_expires_'.$name);
+		return;
+	}
+
+
+	protected static function clearNonces($force=false)
+	{
+		if (!$force and rand(0,100)!==100) {
+			return;
+		}
+
+		global $wpdb;
+		$sql = 'SELECT option_id, 
+		               option_name, 
+		               option_value 
+		          FROM ' . $wpdb->options . ' 
+		         WHERE option_name like "wp_simple_nonce_expires_%"'
+		$rows = $wpdb->get_results($sql);
+
+		foreach ( $rows as $singleNonce ) 
+		{
+			if ($singleNonce->option_value>time()+86400) {
+				$name = substr($singleNonce->option_name, 16);
+				self::deleteNonce($name);
+			}
+		}
+
+		return;
+
+	}
 }
