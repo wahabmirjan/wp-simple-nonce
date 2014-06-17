@@ -1,9 +1,11 @@
 <?PHP
 Class WPSimpleNonce {
 
+	const option_root ='wp-snc';
 
-	public static function createNonce($name='nonce')
+	public static function createNonce($name)
 	{
+
 		if (is_array($name)) {
 			if (isset($name['name'])) {
 				$name = $name['name'];
@@ -12,11 +14,14 @@ Class WPSimpleNonce {
 			}
 		}
 
-		$nonce = md5( wp_salt('nonce') . $name . microtime(true));
-		$this->storeNonce($nonce,$name);
+		$id = self::generate_id();
+		$name = substr($name, 0,17).'_'.$id;
 
-		return $name;
+		$nonce = md5( wp_salt('nonce') . $name . microtime(true));
+		self::storeNonce($nonce,$name);
+		return ['name'=>$name,'value'=>$nonce];
 	}
+
 
 
 	public static function createNonceField($name='nonce')
@@ -31,8 +36,8 @@ Class WPSimpleNonce {
 
 		$name   = filter_var($name,FILTER_SANITIZE_STRING);
 		$nonce  = self::createNonce($name);
-
-		return '<input type="hidden" name="' . $name . '" value="'.$nonce.'" />';
+		$nonce['value'] = '<input type="hidden" name="' . $nonce['name'] . '" value="'.$nonce['value'].'" />';
+		return $nonce;
 	}
 
 
@@ -51,16 +56,16 @@ Class WPSimpleNonce {
 			return false;
 		}
 
-		add_option('wp_simple_nonce_'.$name,$nonce);
-		add_option('wp_simple_nonce_expires_'.$name,time()+86400);
+		add_option(self::option_root.'_'.$name,$nonce);
+		add_option(self::option_root.'_expires_'.$name,time()+86400);
 		return true;
 	}
 
 
 	protected static function  fetchNonce($name)
 	{
-		$returnValue = get_option('wp_simple_nonce_'.$name);
-		$nonceExpires = get_option('wp_simple_nonce_expires_'.$name);
+		$returnValue = get_option(self::option_root.'_'.$name);
+		$nonceExpires = get_option(self::option_root.'_expires_'.$name);
 		
 		self::deleteNonce($name);
 		
@@ -72,17 +77,17 @@ Class WPSimpleNonce {
 	}
 
 
-	public static function deleteNonce($name = '')
+	public static function deleteNonce($name)
 	{
-		delete_option('wp_simple_nonce_'.$name);
-		delete_option('wp_simple_nonce_expires_'.$name);
+		delete_option(self::option_root.'_'.$name);
+		delete_option(self::option_root.'_expires_'.$name);
 		return;
 	}
 
 
-	protected static function clearNonces($force=false)
+	protected static function clearNonces()
 	{
-		if (!$force and rand(0,100)!==100) {
+		if ( defined('WP_SETUP_CONFIG') or defined('WP_INSTALLING')  ) {
 			return;
 		}
 
@@ -91,13 +96,13 @@ Class WPSimpleNonce {
 		               option_name, 
 		               option_value 
 		          FROM ' . $wpdb->options . ' 
-		         WHERE option_name like "wp_simple_nonce_expires_%"'
+		         WHERE option_name like "'.self::option_root.'_expires_%"';
 		$rows = $wpdb->get_results($sql);
 
 		foreach ( $rows as $singleNonce ) 
 		{
 			if ($singleNonce->option_value>time()+86400) {
-				$name = substr($singleNonce->option_name, 16);
+				$name = substr($singleNonce->option_name, strlen(self::option_root));
 				self::deleteNonce($name);
 			}
 		}
@@ -105,4 +110,13 @@ Class WPSimpleNonce {
 		return;
 
 	}
+
+	protected static function generate_id() {
+		require_once( ABSPATH . 'wp-includes/class-phpass.php');
+		$hasher = new PasswordHash( 8, false );
+		return md5($hasher->get_random_bytes(100,false));
+	}
+
+
 }
+

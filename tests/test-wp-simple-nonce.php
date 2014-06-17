@@ -11,35 +11,44 @@ class WPSimpleNonceTest extends WP_UnitTestCase {
 	function testSimple() 
 	{
 		$nonce = WPSimpleNonce::createNonce('test');
-		$this->assertNotEmpty($nonce);
-		$this->assertTrue(WPSimpleNonce::checkNonce('test',$nonce));
+		$this->assertTrue(is_array($nonce));
+		$this->assertArrayHasKey('name',$nonce);
+		$this->assertArrayHasKey('value',$nonce);
+		$this->assertTrue(WPSimpleNonce::checkNonce($nonce['name'],$nonce['value']));
 		return;
 	}
 
-	function testUsedOnce()
-	{
-		$nonce = WPSimpleNonce::createNonce('test');
-		$this->assertNotEmpty($nonce);
-		$this->assertTrue(WPSimpleNonce::checkNonce('test',$nonce));
-		$this->assertFalse(WPSimpleNonce::checkNonce('test',$nonce));
-		return;
-	}
-
-	function testComplex() 
-	{
-		$nonce = WPSimpleNonce::createNonce('nonceTest');
-		$field = WPSimpleNonce::createNonceField('fieldTest');
-		$this->assertNotEmpty($nonce);
-		$this->assertTrue(WPSimpleNonce::checkNonce('nonceTest',$nonce));
-		return;
-	}
 
 	function testFormField()
 	{
 		$field = WPSimpleNonce::createNonceField('test');
-		$this->assertRegExp('/.*value="(.*)".*/',$field);
-		preg_match('/.*value="(.*)".*/',$field,$matches);
-		$this->assertTrue(WPSimpleNonce::checkNonce('test',$matches[1]));
+		$this->assertArrayHasKey('name',$field);
+		$this->assertArrayHasKey('value',$field);
+		$this->assertRegExp('/.*value="(.*)".*/',$field['value']);
+		preg_match('/.*value="(.*)".*/',$field['value'],$matches);
+		$this->assertTrue(WPSimpleNonce::checkNonce($field['name'],$matches[1]));
+		return;
+	}
+
+
+	function testComplex() 
+	{
+		$nonce = WPSimpleNonce::createNonce('nonceTest');
+		$field = WPSimpleNonce::createNonceField('complexFieldTest');
+		$this->assertNotEmpty($nonce['name']);
+		$this->assertTrue(WPSimpleNonce::checkNonce($nonce['name'],$nonce['value']));
+		preg_match('/.*value="(.*)".*/',$field['value'],$matches);	
+		$this->assertTrue(WPSimpleNonce::checkNonce($field['name'],$matches[1]));
+		return;
+	}
+
+
+	function testUsedOnce()
+	{
+		$nonce = WPSimpleNonce::createNonce('test');
+		$this->assertNotEmpty($nonce['name']);
+		$this->assertTrue(WPSimpleNonce::checkNonce($nonce['name'],$nonce['value']));
+		$this->assertFalse(WPSimpleNonce::checkNonce($nonce['name'],$nonce['value']));
 		return;
 	}
 
