@@ -26,9 +26,12 @@ This plugin does not have an admin interface. It is intended for developers only
 1. Upload `wp-simple-nonce` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Create a NONCE with `$myNonce = WPSimpleNonce::createNonce('myNonce');`
-1. Check a NONCE with `$result = WPSimpleNonce::checkNonce(‘myNonce,$myNonce);`
+1. Check a NONCE with `$result = WPSimpleNonce::checkNonce($myNonce['name'],$myNonce['value']);`
 
 == Changelog ==
 
 = 1.0 =
 * Initial release
+= 1.1 =
+* Removed the dependency on wp-session-manager
+

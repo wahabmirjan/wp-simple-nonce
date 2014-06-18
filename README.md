@@ -20,3 +20,12 @@ WordPress has a very good NONCE system built into it's core, but it is not a tru
 This plugin does not override the existing Wordpress NONCE system.
 
 This plugin does not have an admin interface. It is intended for developers only.
+
+Changelog
+---------
+
+= 1.0 =
+* Initial release
+= 1.1 =
+* Removed the dependency on wp-session-manager
+
