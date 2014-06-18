@@ -24,8 +24,9 @@ This plugin does not have an admin interface. It is intended for developers only
 Changelog
 ---------
 
-= 1.0 =
-* Initial release
-= 1.1 =
-* Removed the dependency on wp-session-manager
+* 1.0
+  * Initial release
+
+* 1.1
+  * Removed the dependency on wp-session-manager
 
