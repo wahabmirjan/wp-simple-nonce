@@ -85,7 +85,7 @@ Class WPSimpleNonce {
 	}
 
 
-	protected static function clearNonces()
+	public static function clearNonces($force=false)
 	{
 		if ( defined('WP_SETUP_CONFIG') or defined('WP_INSTALLING')  ) {
 			return;
@@ -102,8 +102,9 @@ Class WPSimpleNonce {
 
 		foreach ( $rows as $singleNonce ) 
 		{
-			if ($singleNonce->option_value>time()+86400) {
-				$name = substr($singleNonce->option_name, strlen(self::option_root));
+
+			if ($force or ($singleNonce->option_value>time()+86400)) {
+				$name = substr($singleNonce->option_name, strlen(self::option_root.'_expires_'));
 				$noncesDeleted +=  (self::deleteNonce($name)?1:0);
 			}
 		}

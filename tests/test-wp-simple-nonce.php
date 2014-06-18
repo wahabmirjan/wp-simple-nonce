@@ -56,15 +56,13 @@ class WPSimpleNonceTest extends WP_UnitTestCase {
 	function testCleanup()
 	{
 		$nonce = [];
-		$nonce[] = WPSimpleNonce::createNonce('test1');
-		$nonce[] = WPSimpleNonce::createNonce('test2');
-		$nonce[] = WPSimpleNonce::createNonce('test3');
+		$nonce[] = WPSimpleNonce::createNonce('1test1');
+		$nonce[] = WPSimpleNonce::createNonce('2test2');
+		$nonce[] = WPSimpleNonce::createNonce('3test3');
 		$this->assertTrue(WPSimpleNonce::checkNonce($nonce[0]['name'],$nonce[0]['value']));
-
-		$this->assertEquals(WPSimpleNonce::clearNonces(),2);
+		$this->assertEquals(WPSimpleNonce::clearNonces(true),2);
 		$this->assertFalse(WPSimpleNonce::checkNonce($nonce[1]['name'],$nonce[1]['value']));
 		return;
 	}
-
 
 }
