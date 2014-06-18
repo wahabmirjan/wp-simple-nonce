@@ -79,9 +79,9 @@ Class WPSimpleNonce {
 
 	public static function deleteNonce($name)
 	{
-		delete_option(self::option_root.'_'.$name);
-		delete_option(self::option_root.'_expires_'.$name);
-		return;
+		$optionDeleted = delete_option(self::option_root.'_'.$name);
+		$optionDeleted = $optionDeleted && delete_option(self::option_root.'_expires_'.$name);
+		return (bool)$optionDeleted;
 	}
 
 
@@ -98,18 +98,20 @@ Class WPSimpleNonce {
 		          FROM ' . $wpdb->options . ' 
 		         WHERE option_name like "'.self::option_root.'_expires_%"';
 		$rows = $wpdb->get_results($sql);
+		$noncesDeleted = 0;
 
 		foreach ( $rows as $singleNonce ) 
 		{
 			if ($singleNonce->option_value>time()+86400) {
 				$name = substr($singleNonce->option_name, strlen(self::option_root));
-				self::deleteNonce($name);
+				$noncesDeleted +=  (self::deleteNonce($name)?1:0);
 			}
 		}
 
-		return;
+		return (int)$noncesDeleted;
 
 	}
+
 
 	protected static function generate_id() {
 		require_once( ABSPATH . 'wp-includes/class-phpass.php');
