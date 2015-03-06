@@ -69,7 +69,7 @@ Class WPSimpleNonce {
 		
 		self::deleteNonce($name);
 		
-		if ($nonceExpires<time()+86400) {
+		if ($nonceExpires<time()) {
 			$returnValue = null;
 		}
 
