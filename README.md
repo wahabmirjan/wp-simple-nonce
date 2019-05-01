@@ -30,3 +30,6 @@ Changelog
 * 1.1
   * Removed the dependency on wp-session-manager
 
+* 1.2
+  * Bug fixes.
+
