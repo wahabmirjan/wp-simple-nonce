@@ -19,7 +19,7 @@ Class WPSimpleNonce {
 
 		$nonce = md5( wp_salt('nonce') . $name . microtime(true));
 		self::storeNonce($nonce,$name);
-		return ['name'=>$name,'value'=>$nonce];
+		return array ("name" => $name, "value" => $nonce,);
 	}
 
 
