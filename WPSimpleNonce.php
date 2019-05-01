@@ -41,8 +41,10 @@ Class WPSimpleNonce {
 	}
 
 
-	public static function checkNonce( $name, $value ) 
+	public static function checkNonce( $name, $value )
 	{
+		if (empty($name) || empty($value))
+			return false;
 		$name = filter_var($name,FILTER_SANITIZE_STRING);
 		$nonce = self::fetchNonce($name);
 		$returnValue = ($nonce===$value);
