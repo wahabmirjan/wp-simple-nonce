@@ -28,8 +28,10 @@ This plugin does not have an admin interface. It is intended for developers only
 
 Important URLs
 --------------
-https://pantheon.io/blog/nonce-upon-time-wordpress
-https://wordpress.tv/2014/09/15/cal-evans-nonce-upon-a-time-in-wordpress/
+- A detailed usage description: https://pantheon.io/blog/nonce-upon-time-wordpress
+
+- A presentation by Cal Evans: https://wordpress.tv/2014/09/15/cal-evans-nonce-upon-a-time-in-wordpress/
+
 
 
 Changelog
