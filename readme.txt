@@ -1,9 +1,9 @@
 === WP SimpleNonce ===
-Contributors: CalEvans < cal@calevans.com>
+Contributors: CalEvans < cal@calevans.com>, Wahab Mirjan <wahab.mirjan@gorilla.solutions>
 Tags: nonce
 Requires at least: 3.5.0
-Tested up to: 3.9.1
-Stable tag: 1.0
+Tested up to: 6.0.2
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,6 +28,7 @@ This plugin does not have an admin interface. It is intended for developers only
 1. Create a NONCE with `$myNonce = WPSimpleNonce::createNonce('myNonce');`
 1. Check a NONCE with `$result = WPSimpleNonce::checkNonce($myNonce['name'],$myNonce['value']);`
 
+
 == Changelog ==
 
 = 1.0 =
@@ -35,5 +36,7 @@ This plugin does not have an admin interface. It is intended for developers only
 = 1.1 =
 * Removed the dependency on wp-session-manager
 = 1.2 =
-* Bug fixes.
-
+* Bug fixes
+= 1.3 =
+* Updated readme files
+* Removed references to Travis CI

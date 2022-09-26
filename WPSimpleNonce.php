@@ -3,13 +3,14 @@ Class WPSimpleNonce {
 
 	const option_root ='wp-snc';
 
-	public static function createNonce($name)
-	{
+	public static function createNonce($name) {
 
 		if (is_array($name)) {
 			if (isset($name['name'])) {
 				$name = $name['name'];
-			} else {
+			}
+
+			else {
 				$name = 'nonce';
 			}
 		}
@@ -24,36 +25,50 @@ Class WPSimpleNonce {
 
 
 
-	public static function createNonceField($name='nonce')
-	{
+	public static function createNonceField($name='nonce') {
+
 		if (is_array($name)) {
+
 			if (isset($name['name'])) {
 				$name = $name['name'];
-			} else {
+			}
+
+			else {
 				$name = 'nonce';
 			}
 		}
 
-		$name   = filter_var($name,FILTER_SANITIZE_STRING);
+		// Issue #11: Remove Deprecated Code
+		// Replacing FILTER_SANITIZE_STRING (which is deprecated) with two filters, FILTER_UNSAFE_RAW and FILTER_SANITIZE_FULL_SPECIAL_CHARS
+		// According to documentation, those two filters will yield to the same results
+		$name   = filter_var($name,FILTER_UNSAFE_RAW);
+		$name   = filter_var($name,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
 		$nonce  = self::createNonce($name);
 		$nonce['value'] = '<input type="hidden" name="' . $nonce['name'] . '" value="'.$nonce['value'].'" />';
 		return $nonce;
 	}
 
 
-	public static function checkNonce( $name, $value )
-	{
-		if (empty($name) || empty($value))
+	public static function checkNonce( $name, $value ) {
+
+		if (empty($name) || empty($value)) {
 			return false;
-		$name = filter_var($name,FILTER_SANITIZE_STRING);
+		}
+
+		// Issue #11: Remove Deprecated Code
+		// Replacing FILTER_SANITIZE_STRING (which is deprecated) with two filters, FILTER_UNSAFE_RAW and FILTER_SANITIZE_FULL_SPECIAL_CHARS
+		// According to documentation, those two filters will yield to the same results
+		$name = filter_var($name,FILTER_UNSAFE_RAW);
+		$name = filter_var($name,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		$nonce = self::fetchNonce($name);
 		$returnValue = ($nonce===$value);
 		return $returnValue;
 	}
 
 
-	public static function  storeNonce($nonce, $name)
-	{
+	public static function  storeNonce($nonce, $name) {
+
 		if (empty($name)) {
 			return false;
 		}
@@ -64,13 +79,13 @@ Class WPSimpleNonce {
 	}
 
 
-	protected static function  fetchNonce($name)
-	{
+	protected static function  fetchNonce($name) {
+
 		$returnValue = get_option(self::option_root.'_'.$name);
 		$nonceExpires = get_option(self::option_root.'_expires_'.$name);
-		
+
 		self::deleteNonce($name);
-		
+
 		if ($nonceExpires<time()) {
 			$returnValue = null;
 		}
@@ -79,31 +94,33 @@ Class WPSimpleNonce {
 	}
 
 
-	public static function deleteNonce($name)
-	{
+	public static function deleteNonce($name) {
+
 		$optionDeleted = delete_option(self::option_root.'_'.$name);
 		$optionDeleted = $optionDeleted && delete_option(self::option_root.'_expires_'.$name);
 		return (bool)$optionDeleted;
 	}
 
 
-	public static function clearNonces($force=false)
-	{
-		if ( defined('WP_SETUP_CONFIG') or defined('WP_INSTALLING')  ) {
+	public static function clearNonces($force=false) {
+
+		if ( defined('WP_SETUP_CONFIG') or defined('WP_INSTALLING') ) {
 			return;
 		}
 
 		global $wpdb;
-		$sql = 'SELECT option_id, 
-		               option_name, 
-		               option_value 
-		          FROM ' . $wpdb->options . ' 
+
+		$sql = 'SELECT option_id,
+		               option_name,
+		               option_value
+		          FROM ' . $wpdb->options . '
 		         WHERE option_name like "'.self::option_root.'_expires_%"';
+
 		$rows = $wpdb->get_results($sql);
+
 		$noncesDeleted = 0;
 
-		foreach ( $rows as $singleNonce ) 
-		{
+		foreach ( $rows as $singleNonce ) {
 
 			if ($force or ($singleNonce->option_value>time()+86400)) {
 				$name = substr($singleNonce->option_name, strlen(self::option_root.'_expires_'));
@@ -112,16 +129,15 @@ Class WPSimpleNonce {
 		}
 
 		return (int)$noncesDeleted;
-
 	}
 
 
 	protected static function generate_id() {
+
 		require_once( ABSPATH . 'wp-includes/class-phpass.php');
 		$hasher = new PasswordHash( 8, false );
 		return md5($hasher->get_random_bytes(100,false));
 	}
-
 
 }
 
