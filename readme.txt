@@ -3,7 +3,7 @@ Contributors: CalEvans < cal@calevans.com>, Wahab Mirjan <wahab.mirjan@gorilla.s
 Tags: nonce
 Requires at least: 3.5.0
 Tested up to: 6.0.2
-Stable tag: 1.3
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,3 +40,6 @@ This plugin does not have an admin interface. It is intended for developers only
 = 1.3 =
 * Updated readme files
 * Removed references to Travis CI
+= 1.4 =
+* Fixed clearing NONCEs
+* Fixed references to deprecated code
