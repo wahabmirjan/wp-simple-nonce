@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: wp-simple-nonce
-Version: 1.1
+Version: 1.4
 Description: A very simple NONCE system for WordPress Developers
 Author: Cal Evans <cal@calevans.com>
 Author URI: https://calevans.com

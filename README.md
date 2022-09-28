@@ -11,8 +11,7 @@ Cal Evans ([calevans](https://github.com/calevans))
 
 Contributors
 ------------
-Cal Evans ([calevans](https://github.com/calevans))
-Wahab Mirjan ([wahabmirjan](https://github.com/wahabmirjan))
+Cal Evans ([calevans](https://github.com/calevans)), Wahab Mirjan ([wahabmirjan](https://github.com/wahabmirjan))
 
 
 Description
@@ -49,3 +48,7 @@ Changelog
 * 1.3
   * Updated readme files
   * Removed references to Travis CI
+
+* 1.4
+  * Fixed clearing NONCEs
+  * Fixed references to deprecated code
