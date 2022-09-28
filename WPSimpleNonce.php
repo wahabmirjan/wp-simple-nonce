@@ -110,11 +110,7 @@ Class WPSimpleNonce {
 
 		global $wpdb;
 
-		$sql = 'SELECT option_id,
-		               option_name,
-		               option_value
-		          FROM ' . $wpdb->options . '
-		         WHERE option_name like "'.self::option_root.'_expires_%"';
+		$sql = $wpdb->prepare("SELECT * FROM $wpdb->options WHERE option_name like '%s'", self::option_root.'_expires_%');
 
 		$rows = $wpdb->get_results($sql);
 
@@ -122,7 +118,9 @@ Class WPSimpleNonce {
 
 		foreach ( $rows as $singleNonce ) {
 
-			if ($force or ($singleNonce->option_value>time()+86400)) {
+			// Issue #7: Clear Nonces does not clear expired nonces
+			if ($force || ($singleNonce->option_value < time()+86400)) {
+
 				$name = substr($singleNonce->option_name, strlen(self::option_root.'_expires_'));
 				$noncesDeleted +=  (self::deleteNonce($name)?1:0);
 			}
