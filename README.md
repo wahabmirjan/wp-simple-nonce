@@ -52,3 +52,6 @@ Changelog
 * 1.4
   * Fixed clearing NONCEs
   * Fixed references to deprecated code
+
+* 1.5
+  * Fixed clearing NONCEs
