@@ -125,11 +125,10 @@ Class WPSimpleNonce {
 
 		foreach ( $rows as $singleNonce ) {
 
-			// Issue #7: Clear Nonces does not clear expired nonces
-			if ($force || ($singleNonce->option_value < time()+86400)) {
+			if ($force || ($singleNonce->option_value < time())) {
 
 				$name = substr($singleNonce->option_name, strlen(self::option_root.'_expires_'));
-				$noncesDeleted +=  (self::deleteNonce($name)?1:0);
+				$noncesDeleted += (self::deleteNonce($name)?1:0);
 			}
 		}
 
